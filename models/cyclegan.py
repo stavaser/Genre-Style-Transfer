@@ -90,6 +90,8 @@ class CycleGAN(pl.LightningModule):
 
         self.use_T = use_T
         self.use_C = use_C
+        
+        self.automatic_optimization = False
 
         self.generator_A = generator(input_shape=input_shape, num_channels=gen_num_channels)
         self.generator_B = generator(input_shape=input_shape, num_channels=gen_num_channels)
@@ -113,8 +115,8 @@ class CycleGAN(pl.LightningModule):
         self.init_weights(self.discriminator_T)
         self.init_weights(self.discriminator_C)
 
-        self.real_acc = torchmetrics.Accuracy()
-        self.fake_acc = torchmetrics.Accuracy()
+        self.real_acc = torchmetrics.Accuracy(task='multiclass', num_classes=10)
+        self.fake_acc = torchmetrics.Accuracy(task='multiclass', num_classes=10)
 
         self.fake_A_pool = ImagePool(50)  # create image buffer to store previously generated images
         self.fake_B_pool = ImagePool(50)  # create image buffer to store previously generated images
@@ -128,7 +130,7 @@ class CycleGAN(pl.LightningModule):
             return self.generator_B(x)
         raise Exception('Wrong generator choice: {}'.format(gen_choice))
 
-    def training_step(self, batch, batch_idx, optimizer_idx):
+    def training_step(self, batch, optimizer_idx):
         segments_A, segments_B = batch
 
         if optimizer_idx == 0: # DISC A

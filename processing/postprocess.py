@@ -49,7 +49,7 @@ def npy_to_midi(song : torch.Tensor,
                 directory : str,
                 bpm : float = 120.0,
                 resolution : int = 8):
-    pass
+    # pass
     """Convert numpy array to midi format.
 
     The file is saved as `INDEX_SONGTYPE.midi`. An example would be `0_original.midi`. Input song will be
@@ -71,6 +71,7 @@ def npy_to_midi(song : torch.Tensor,
         Sets the resolution of the pianoroll (i.e. sampling rate). It is recommended to use the same
         resolution as used with preprocessing.
     """
+    song = song.cpu()
 
     categories = ['Piano', 'Chromatic Percussion', 'Organ',
                   'Guitar', 'Bass', 'Strings', 'Ensemble',

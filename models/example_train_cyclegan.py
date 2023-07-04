@@ -11,9 +11,9 @@ sys.path.insert(1, '../')
 from utils.dataset import GAN_PKL_DATASET
 
 BATCH_SIZE = 128
-DATASET_PATH = "../processing/DATASET..." # Add dataset path
+DATASET_PATH = "../processing/segments_inst1_bars4_res4_prange(21, 107)/dataset.pkl" # Add dataset path
 LOG_PATH = "./logs/"
-NUM_WORKERS = 20
+NUM_WORKERS = 8
 EPOCHS = 100
 SAVE_DIRECTORY = str(datetime.datetime.now().strftime("%Y_%m_%d_%H_%M"))
 
@@ -64,10 +64,10 @@ def main():
     print('\nLogs are stored in "{}".'.format(LOG_PATH))
     trainer = pl.Trainer(
             max_epochs=EPOCHS,
-            gpus=-1, # -1 will select all available gpus
+            accelerator="gpu", # -1 will select all available gpus
             logger=pl.loggers.TensorBoardLogger(save_dir=LOG_PATH),
             log_every_n_steps=1,
-            strategy='fsdp',
+            # strategy='fsdp',
             default_root_dir = os.path.join(SAVE_DIRECTORY, 'checkpoints'),
             callbacks = [checkpoint_callback]
         )
